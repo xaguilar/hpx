@@ -39,7 +39,6 @@
 // when we have maxed out the number of sends we can handle
 #define HPX_PARCELPORT_LIBFABRIC_SUSPEND_WAKE  (HPX_PARCELPORT_LIBFABRIC_THROTTLE_SENDS/2)
 
-
 // --------------------------------------------------------------------
 // Enable the use of boost small_vector for certain short lived storage
 // elements within the parcelport. This can reduce some memory allocations
@@ -51,15 +50,16 @@
 #define HPX_PARCELPORT_LIBFABRIC_IMM_UNSUPPORTED 1
 
 // --------------------------------------------------------------------
+#include <hpx/runtime/parcelset/rma/memory_pool.hpp>
+//
+#include <plugins/parcelport/parcelport_logging.hpp>
+#include <plugins/parcelport/performance_counter.hpp>
 #include <plugins/parcelport/unordered_map.hpp>
+//
 #include <plugins/parcelport/libfabric/header.hpp>
 #include <plugins/parcelport/libfabric/locality.hpp>
-
 #include <plugins/parcelport/libfabric/libfabric_region_provider.hpp>
-#include <plugins/parcelport/performance_counter.hpp>
-#include <plugins/parcelport/rma_memory_pool.hpp>
 #include <plugins/parcelport/libfabric/connection_handler.hpp>
-#include <plugins/parcelport/parcelport_logging.hpp>
 #include <plugins/parcelport/libfabric/rdma_locks.hpp>
 #include <plugins/parcelport/libfabric/libfabric_controller.hpp>
 
@@ -169,6 +169,11 @@ namespace libfabric
         LOG_DEBUG_MSG("Fetching memory pool");
         chunk_pool_ = &libfabric_controller_->get_memory_pool();
 
+        // setup provider specific allocator for rma_object use
+        rma::detail::rma_allocator_impl<char, libfabric_region_provider> *default_allocator =
+            new rma::detail::rma_allocator_impl<char, libfabric_region_provider>(chunk_pool_);
+        allocator_ = default_allocator;
+        //
         for (std::size_t i = 0; i < HPX_PARCELPORT_LIBFABRIC_THROTTLE_SENDS; ++i)
         {
             sender *snd =
@@ -266,8 +271,8 @@ namespace libfabric
             delete snd;
         }
         LOG_DEBUG_MSG(
-            << "sends_posted "  << decnumber(sends_posted)
-            << "sends_deleted " << decnumber(sends_posted)
+               "sends_posted "  << decnumber(sends_posted)
+            << "sends_deleted " << decnumber(sends_deleted)
             << "acks_received " << decnumber(acks_received)
             << "non_rma-send "  << decnumber(sends_posted-acks_received));
         //
