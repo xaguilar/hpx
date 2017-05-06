@@ -12,6 +12,7 @@ set(tests
     serialization_deque
     serialization_map
     serialization_list
+    serialization_rma_object
     serialization_set
     serialization_simple
     serialization_smart_ptr

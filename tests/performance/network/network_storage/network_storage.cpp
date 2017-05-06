@@ -8,11 +8,15 @@
 #include <hpx/include/actions.hpp>
 #include <hpx/components/iostreams/standard_streams.hpp>
 #include <hpx/lcos/local/detail/sliding_semaphore.hpp>
-
+//
+#include <hpx/runtime/serialization/serialize.hpp>
+#include <hpx/runtime/parcelset/rma/rma_object.hpp>
+#include <hpx/runtime/parcelset/rma/allocator.hpp>
+//
 #include <boost/assert.hpp>
 #include <boost/atomic.hpp>
 #include <boost/random.hpp>
-
+//
 #include <array>
 #include <algorithm>
 #include <chrono>
@@ -26,8 +30,7 @@
 #include <utility>
 #include <vector>
 #include <map>
-
-#include <hpx/runtime/serialization/serialize.hpp>
+//
 #include <simple_profiler.hpp>
 
 //
@@ -140,12 +143,26 @@ std::array<boost::atomic<int>, MAX_RANKS>    FuturesWaiting;
  hpx::lcos::local::spinlock                 FuturesMutex;
 #endif
 
+struct unusual {
+    std::array<char,256> some_data;
+    std::pair<int, int>  a_pair;
+};
+
+HPX_IS_BITWISE_SERIALIZABLE(unusual);
+
+static_assert(
+        hpx::traits::is_rma_elegible<unusual>::value,
+        "we need this to be serializable"
+);
+
 //----------------------------------------------------------------------------
 //
 // Each locality allocates a buffer of memory which is used to host transfers
 //
-char                      *local_storage = nullptr;
+hpx::parcelset::rma::rma_vector<char> rma_storage;
+char *local_storage;
 hpx::lcos::local::spinlock storage_mutex;
+
 
 //
 typedef struct {
@@ -165,6 +182,9 @@ typedef struct {
 //----------------------------------------------------------------------------
 void allocate_local_storage(uint64_t local_storage_bytes)
 {
+    hpx::parcelset::rma::rma_object<int> x =
+        hpx::parcelset::rma::make_rma_object<int>();
+    rma_storage.reserve(local_storage_bytes);
     local_storage = new char[local_storage_bytes];
 }
 
