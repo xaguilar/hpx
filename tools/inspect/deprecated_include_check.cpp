@@ -49,6 +49,7 @@ namespace boost
       { "boost/nondet_random.hpp", "random" },
       { "boost/random/([^\\s]*)\\.hpp", "random" },
       { "boost/format\\.hpp", "hpx/util/format.hpp" },
+      { "boost/regex.hpp", "regex" },
       { nullptr, nullptr }
     };
 
