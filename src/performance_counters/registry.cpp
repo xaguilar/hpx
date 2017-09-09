@@ -21,7 +21,6 @@
 #include <hpx/util/rolling_max.hpp>
 #include <hpx/util/rolling_min.hpp>
 
-#include <boost/regex.hpp>
 #include <boost/accumulators/statistics_fwd.hpp>
 #if BOOST_VERSION >= 105600
 #include <boost/accumulators/statistics/rolling_variance.hpp>
@@ -30,6 +29,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <regex>
 #include <string>
 #include <utility>
 #include <vector>
@@ -257,13 +257,13 @@ namespace hpx { namespace performance_counters
             if (ec) return status_invalid_data;
 
             bool found_one = false;
-            boost::regex rx(str_rx, boost::regex::perl);
+            std::regex rx(str_rx);
 
             counter_type_map_type::const_iterator end = countertypes_.end();
             for (counter_type_map_type::const_iterator it = countertypes_.begin();
                  it != end; ++it)
             {
-                if (!boost::regex_match((*it).first, rx))
+                if (!std::regex_match((*it).first, rx))
                     continue;
                 found_one = true;
 

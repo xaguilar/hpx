@@ -13,10 +13,10 @@
 #include <cstddef>
 #include <iostream>
 #include <functional>
+#include <regex>
 #include <string>
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
-#include "boost/regex.hpp"
 #include "boost/filesystem/operations.hpp"
 
 using namespace std;
@@ -100,15 +100,15 @@ namespace boost
             {
                 currline++;
                 bool check_not = false;
-                boost::regex error_note, http_note;
+                std::regex error_note, http_note;
 
                 for (std::size_t i = 0;
                      i != sizeof(patterns)/sizeof(patterns[0]);
                      ++i)
                 {
-                    boost::regex rx(patterns[i].rx_);
-                    boost::smatch m;
-                    if (boost::regex_search(someline[p], m, rx))
+                    std::regex rx(patterns[i].rx_);
+                    std::smatch m;
+                    if (std::regex_search(someline[p], m, rx))
                     {
                         // skip this line if either no position is specified
                         // or the pattern was found at the given position

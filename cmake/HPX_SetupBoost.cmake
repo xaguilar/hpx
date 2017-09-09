@@ -66,7 +66,6 @@ set(__boost_libraries
   atomic
   filesystem
   program_options
-  regex
   system)
 
 find_package(Boost 1.55 REQUIRED COMPONENTS ${__boost_libraries})

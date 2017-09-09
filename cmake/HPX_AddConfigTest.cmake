@@ -485,6 +485,13 @@ macro(hpx_check_for_cxx11_std_reference_wrapper)
 endmacro()
 
 ###############################################################################
+macro(hpx_check_for_cxx11_std_regex)
+  add_hpx_config_test(HPX_WITH_CXX11_REGEX
+    SOURCE cmake/tests/cxx11_std_regex.cpp
+    FILE ${ARGN})
+endmacro()
+
+###############################################################################
 macro(hpx_check_for_cxx11_std_shared_ptr)
   add_hpx_config_test(HPX_WITH_CXX11_SHARED_PTR
     SOURCE cmake/tests/cxx11_std_shared_ptr.cpp

@@ -12,8 +12,8 @@
 
 #include "deprecated_macro_check.hpp"
 #include <functional>
+#include <regex>
 #include "function_hyper.hpp"
-#include "boost/regex.hpp"
 #include "boost/filesystem/operations.hpp"
 
 namespace fs = boost::filesystem;

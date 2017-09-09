@@ -7,20 +7,20 @@
 
 #include <hpx/config/defines.hpp>
 
-#include "boost/regex.hpp"
+#include <regex>
 #include "license_check.hpp"
 #include "function_hyper.hpp"
 
 namespace
 {
-  boost::regex license_regex(
+  std::regex license_regex(
     //~ The next two lines change the regex so that it detects when the license
     //~ doesn't follow the prefered statement. Disabled because it currently
     //~ generates a large number of issues.
     //~ "Distributed[\\s\\W]+"
     //~ "under[\\s\\W]+the[\\s\\W]+"
     "boost[\\s\\W]+software[\\s\\W]+license",
-    boost::regbase::normal | boost::regbase::icase);
+    std::regex_constants::icase);
 
 } // unnamed namespace
 
@@ -39,7 +39,7 @@ namespace boost
     {
       if (contents.find( "hpxinspect:" "nolicense" ) != string::npos) return;
 
-      if ( !boost::regex_search( contents, license_regex ) )
+      if ( !std::regex_search( contents, license_regex ) )
       {
         ++m_files_with_errors;
         error( library_name, full_path, loclink(full_path, name()) );

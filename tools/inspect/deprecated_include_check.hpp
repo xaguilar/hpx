@@ -14,8 +14,7 @@
 
 #include "inspector.hpp"
 
-#include "boost/regex.hpp"
-
+#include <regex>
 #include <vector>
 
 namespace boost
@@ -33,11 +32,11 @@ namespace boost
     {
       deprecated_includes_regex_data(deprecated_includes const* d,
             std::string const& rx)
-        : data(d), pattern(rx, boost::regex::normal)
+        : data(d), pattern(rx)
       {}
 
       deprecated_includes const* data;
-      boost::regex pattern;
+      std::regex pattern;
     };
 
     class deprecated_include_check : public inspector

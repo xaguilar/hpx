@@ -11,10 +11,10 @@
 
 #include <hpx/plugins/parcel/coalescing_counter_registry.hpp>
 
-#include <boost/regex.hpp>
 
 #include <cstdint>
 #include <mutex>
+#include <regex>
 #include <string>
 #include <utility>
 #include <vector>
@@ -262,7 +262,7 @@ namespace hpx { namespace plugins { namespace parcel
             if (ec) return false;
 
             bool found_one = false;
-            boost::regex rx(str_rx, boost::regex::perl);
+            std::regex rx(str_rx);
 
             std::unique_lock<mutex_type> l(mtx_);
 
@@ -270,7 +270,7 @@ namespace hpx { namespace plugins { namespace parcel
                 map_type::const_iterator end = map_.end();
                 for (map_type::const_iterator it = map_.begin(); it != end; ++it)
                 {
-                    if (!boost::regex_match((*it).first, rx))
+                    if (!std::regex_match((*it).first, rx))
                         continue;
                     found_one = true;
 

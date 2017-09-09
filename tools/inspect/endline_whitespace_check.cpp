@@ -12,10 +12,10 @@
 #include "function_hyper.hpp"
 #include <iostream>
 #include <functional>
+#include <regex>
 #include <string>
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
-#include "boost/regex.hpp"
 #include "boost/filesystem/operations.hpp"
 
 

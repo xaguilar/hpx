@@ -10,9 +10,9 @@
 #include <hpx/config/defines.hpp>
 
 #include <algorithm>
+#include <regex>
 
 #include "include_check.hpp"
-#include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
 #include "function_hyper.hpp"
 
@@ -20,11 +20,11 @@ namespace boost
 {
   namespace inspect
   {
-    boost::regex include_regex(
+    std::regex include_regex(
       "^\\s*#\\s*include\\s*<([^\n>]*)>(\\s|//[^\\n]*|/\\*.*?\\*/)*$"     // # include <foobar>
       "|"
       "^\\s*#\\s*include\\s*\"([^\n\"]*)\"(\\s|//[^\\n]*|/\\*.*?\\*/)*$"  // # include "foobar"
-      , boost::regex::normal);
+    );
 
     names_includes const names[] =
     {
@@ -225,7 +225,7 @@ namespace boost
       // first, collect all #includes in this file
       std::set<std::string> includes;
 
-      boost::sregex_iterator cur(contents.begin(), contents.end(), include_regex), end;
+      std::sregex_iterator cur(contents.begin(), contents.end(), include_regex), end;
 
       for( ; cur != end; ++cur /*, ++m_errors*/ )
       {
@@ -245,7 +245,7 @@ namespace boost
       std::set<std::string> found_names;
       for (names_regex_data const& d : regex_data)
       {
-        boost::sregex_iterator cur(contents.begin(), contents.end(), d.pattern), end;
+        std::sregex_iterator cur(contents.begin(), contents.end(), d.pattern), end;
         for(/**/; cur != end; ++cur)
         {
           auto m = *cur;

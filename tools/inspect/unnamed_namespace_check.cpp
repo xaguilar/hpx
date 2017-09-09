@@ -8,17 +8,17 @@
 
 #include <hpx/config/defines.hpp>
 
-#include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
 #include "unnamed_namespace_check.hpp"
 #include "function_hyper.hpp"
+#include <regex>
 #include <string>
 
 
 namespace
 {
 
-  boost::regex unnamed_namespace_regex(
+  std::regex unnamed_namespace_regex(
      "\\<namespace\\s*(\\?\\?<|\\{)" // trigraph ??< or {
   );
 
@@ -49,7 +49,7 @@ namespace boost
       if (contents.find( "hpxinspect:" "nounnamed" ) != string::npos) return;
 
 
-      boost::sregex_iterator cur(contents.begin(), contents.end(), unnamed_namespace_regex), end;
+      std::sregex_iterator cur(contents.begin(), contents.end(), unnamed_namespace_regex), end;
       for( ; cur != end; ++cur, ++m_errors )
       {
         const string::size_type

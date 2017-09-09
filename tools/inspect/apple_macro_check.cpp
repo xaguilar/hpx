@@ -12,15 +12,15 @@
 #include "apple_macro_check.hpp"
 #include "function_hyper.hpp"
 #include <functional>
+#include <regex>
 #include <string>
-#include "boost/regex.hpp"
 #include "boost/filesystem/operations.hpp"
 
 namespace fs = boost::filesystem;
 
 namespace
 {
-  boost::regex apple_macro_regex(
+  std::regex apple_macro_regex(
     "("
     "^\\s*#\\s*undef\\s*" // # undef
     "\\b(check|verify|require|check_error)\\b"
@@ -39,7 +39,7 @@ namespace
     "\\b(check|verify|require|check_error)\\b" // apple macro name, whole word
     "\\s*\\("         // followed by 0 or more spaces and an opening paren
     ")"
-    , boost::regex::normal);
+    );
 
 } // unnamed namespace
 
@@ -71,7 +71,7 @@ namespace boost
       path relative( relative_to( full_path, search_root_path() ) );
       if ( relative.empty() || *relative.begin() != "boost") return;
 
-      boost::sregex_iterator cur(contents.begin(),
+      std::sregex_iterator cur(contents.begin(),
           contents.end(), apple_macro_regex), end;
 
       long errors = 0;

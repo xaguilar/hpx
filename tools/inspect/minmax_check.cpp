@@ -10,15 +10,15 @@
 #include <hpx/config/defines.hpp>
 
 #include <algorithm>
+#include <regex>
 
 #include "minmax_check.hpp"
-#include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
 #include "function_hyper.hpp"
 
 namespace
 {
-  boost::regex minmax_regex(
+  std::regex minmax_regex(
     "("
     "^\\s*#\\s*undef\\s*" // # undef
     "\\b(min|max)\\b"     // followed by min or max, whole word
@@ -36,7 +36,7 @@ namespace
     "\\b(min|max)\\b" // min or max, whole word
     "\\s*\\("         // followed by 0 or more spaces and an opening paren
     ")"
-    , boost::regex::normal);
+    );
 
 } // unnamed namespace
 
@@ -70,7 +70,7 @@ namespace boost
     {
       if (contents.find( "hpxinspect:" "nominmax" ) != string::npos) return;
 
-      boost::sregex_iterator cur(contents.begin(), contents.end(), minmax_regex), end;
+      std::sregex_iterator cur(contents.begin(), contents.end(), minmax_regex), end;
 
       for( ; cur != end; ++cur /*, ++m_errors*/ )
       {

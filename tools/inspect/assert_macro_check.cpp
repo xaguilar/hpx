@@ -11,8 +11,8 @@
 
 #include "assert_macro_check.hpp"
 #include <functional>
+#include <regex>
 #include "function_hyper.hpp"
-#include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
 #include "boost/filesystem/operations.hpp"
 
@@ -20,7 +20,7 @@ namespace fs = boost::filesystem;
 
 namespace
 {
-  boost::regex assert_macro_regex(
+  std::regex assert_macro_regex(
     "("
     "^\\s*#\\s*undef\\s*" // # undef
     "\\b(assert)\\b"      // followed by assert macro, whole word
@@ -38,7 +38,7 @@ namespace
     "\\b(assert)\\b"  // assert macro, whole word
     "\\s*\\("         // followed by 0 or more spaces and an opening paren
     ")"
-    , boost::regex::normal);
+    );
 
 } // unnamed namespace
 
@@ -82,7 +82,7 @@ namespace boost
       }
 
       long errors = 0;
-      boost::sregex_iterator cur(contents.begin(),
+      std::sregex_iterator cur(contents.begin(),
           contents.end(), assert_macro_regex), end;
       for( ; cur != end; ++cur )
       {

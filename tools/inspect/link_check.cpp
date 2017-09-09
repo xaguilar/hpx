@@ -10,10 +10,10 @@
 
 #include "link_check.hpp"
 #include "function_hyper.hpp"
-#include "boost/regex.hpp"
 #include "boost/filesystem/operations.hpp"
 #include <boost/algorithm/string/case_conv.hpp>
 #include <cstdlib>
+#include <regex>
 #include <set>
 
 // #include <iostream>
@@ -22,25 +22,24 @@ namespace fs = boost::filesystem;
 
 namespace
 {
-  boost::regex html_bookmark_regex(
+  std::regex html_bookmark_regex(
     "<([^\\s<>]*)\\s*[^<>]*\\s+(NAME|ID)\\s*=\\s*(['\"])(.*?)\\3"
     "|<!--.*?-->",
-    boost::regbase::normal | boost::regbase::icase);
-  boost::regex html_url_regex(
+    std::regex_constants::icase);
+  std::regex html_url_regex(
     "<([^\\s<>]*)\\s*[^<>]*\\s+(?:HREF|SRC)" // HREF or SRC
     "\\s*=\\s*(['\"])\\s*(.*?)\\s*\\2"
     "|<!--.*?-->",
-    boost::regbase::normal | boost::regbase::icase);
-  boost::regex css_url_regex(
+    std::regex_constants::icase);
+  std::regex css_url_regex(
     "(\\@import\\s*[\"']|url\\s*\\(\\s*[\"']?)([^\"')]*)"
     "|/\\*.*?\\*/",
-    boost::regbase::normal | boost::regbase::icase);
+    std::regex_constants::icase);
 
   // Regular expression for parsing URLS from:
   // http://tools.ietf.org/html/rfc3986#appendix-B
-  boost::regex url_decompose_regex(
-    "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$",
-    boost::regbase::normal);
+  std::regex url_decompose_regex(
+    "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$");
 
     typedef std::set<std::string> bookmark_set;
     bookmark_set bookmarks;
@@ -147,14 +146,15 @@ namespace boost
       bookmarks_lowercase.clear();
       string::const_iterator a_start( contents.begin() );
       string::const_iterator a_end( contents.end() );
-      boost::match_results< string::const_iterator > a_what;
-      boost::match_flag_type a_flags = boost::match_default;
+      std::match_results< string::const_iterator > a_what;
+      std::regex_constants::match_flag_type a_flags =
+          std::regex_constants::match_default;
 
       if(!is_css(full_path))
       {
         string previous_id;
 
-        while( boost::regex_search( a_start, a_end, a_what, html_bookmark_regex, a_flags) )
+        while( std::regex_search( a_start, a_end, a_what, html_bookmark_regex, a_flags) )
         {
           // a_what[0] contains the whole string iterators.
           // a_what[1] contains the tag iterators.
@@ -197,20 +197,21 @@ namespace boost
           }
 
           a_start = a_what[0].second; // update search position
-          a_flags |= boost::match_prev_avail; // update flags
-          a_flags |= boost::match_not_bob;
+          a_flags |= std::regex_constants::match_prev_avail; // update flags
+          a_flags |= std::regex_constants::match_not_bol;
         }
       }
 
       // process urls
       string::const_iterator start( contents.begin() );
       string::const_iterator end( contents.end() );
-      boost::match_results< string::const_iterator > what;
-      boost::match_flag_type flags = boost::match_default;
+      std::match_results< string::const_iterator > what;
+      std::regex_constants::match_flag_type flags =
+          std::regex_constants::match_default;
 
       if(!is_css(full_path))
       {
-        while( boost::regex_search( start, end, what, html_url_regex, flags) )
+        while( std::regex_search( start, end, what, html_url_regex, flags) )
         {
           // what[0] contains the whole string iterators.
           // what[1] contains the element type iterators.
@@ -228,12 +229,12 @@ namespace boost
           }
 
           start = what[0].second; // update search position
-          flags |= boost::match_prev_avail; // update flags
-          flags |= boost::match_not_bob;
+          flags |= std::regex_constants::match_prev_avail; // update flags
+          flags |= std::regex_constants::match_not_bol;
         }
       }
 
-      while( boost::regex_search( start, end, what, css_url_regex, flags) )
+      while( std::regex_search( start, end, what, css_url_regex, flags) )
       {
         // what[0] contains the whole string iterators.
         // what[2] contains the URL iterators.
@@ -246,8 +247,8 @@ namespace boost
         }
 
         start = what[0].second; // update search position
-        flags |= boost::match_prev_avail; // update flags
-        flags |= boost::match_not_bob;
+        flags |= std::regex_constants::match_prev_avail; // update flags
+        flags |= std::regex_constants::match_not_bol;
       }
     }
 
@@ -278,8 +279,8 @@ namespace boost
         return;
       }
 
-      boost::smatch m;
-      if(!boost::regex_match(decoded_url, m, url_decompose_regex)) {
+      std::smatch m;
+      if(!std::regex_match(decoded_url, m, url_decompose_regex)) {
         if(!no_link_errors) {
           ++m_invalid_errors;
           std::size_t ln = std::count( contents_begin, url_start, '\n' ) + 1;

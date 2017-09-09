@@ -11,9 +11,9 @@
 #include <hpx/config/defines.hpp>
 
 #include <algorithm>
+#include <regex>
 
 #include "deprecated_include_check.hpp"
-#include "boost/regex.hpp"
 #include "boost/lexical_cast.hpp"
 #include "function_hyper.hpp"
 
@@ -108,7 +108,7 @@ namespace boost
       // check for all given includes
       for (deprecated_includes_regex_data const& d : regex_data)
       {
-        boost::sregex_iterator cur(contents.begin(), contents.end(), d.pattern), end;
+        std::sregex_iterator cur(contents.begin(), contents.end(), d.pattern), end;
         for(/**/; cur != end; ++cur)
         {
           auto m = *cur;
