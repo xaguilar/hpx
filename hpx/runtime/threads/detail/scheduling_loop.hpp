@@ -316,14 +316,15 @@ namespace hpx { namespace threads { namespace detail
             hpx::util::thread_description("background_work"),
             0,
             thread_priority_high_recursive,
-            num_thread,
+            thread_schedule_hint(num_thread),
             get_stack_size(thread_stacksize_large),
             &scheduler);
 
         // Create in suspended to prevent the thread from being scheduled
         // directly...
         scheduler.SchedulingPolicy::create_thread(background_init,
-            &background_thread, suspended, true, hpx::throws, num_thread); //JB_EDIT
+            &background_thread, suspended, true, hpx::throws, 
+            thread_schedule_hint(num_thread));
         HPX_ASSERT(background_thread);
         scheduler.SchedulingPolicy::increment_background_thread_count();
         // We can now set the state to pending
@@ -457,7 +458,8 @@ namespace hpx { namespace threads { namespace detail
             !params.background_.empty())
         {
             background_thread = create_background_thread(scheduler, params,
-                background_running, num_thread, idle_loop_count);
+                background_running,
+                thread_schedule_hint(num_thread), idle_loop_count);
         }
 
         thread_data* next_thrd = nullptr;
@@ -742,7 +744,8 @@ namespace hpx { namespace threads { namespace detail
                     // avoid deadlock situations, if all background threads are
                     // blocked.
                     background_thread = create_background_thread(scheduler, params,
-                        background_running, num_thread, idle_loop_count);
+                        background_running,
+                        thread_schedule_hint(num_thread), idle_loop_count);
                 }
 
                 // call back into invoking context
@@ -774,7 +777,8 @@ namespace hpx { namespace threads { namespace detail
                     // avoid deadlock situations, if all background threads are
                     // blocked.
                     background_thread = create_background_thread(scheduler, params,
-                        background_running, num_thread, idle_loop_count);
+                        background_running,
+                        thread_schedule_hint(num_thread), idle_loop_count);
                 }
             }
             else if ((scheduler.get_scheduler_mode() & policies::fast_idle_mode) ||

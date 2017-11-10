@@ -86,8 +86,8 @@ namespace hpx { namespace threads { namespace detail
             data.priority = thread_priority_normal;
 
         // create the new thread
-        std::size_t num_thread = data.num_os_thread;
-        scheduler->create_thread(data, &id, initial_state, run_now, ec, num_thread); //JB_EDIT
+        thread_schedule_hint schedulehint = data.schedulehint;
+        scheduler->create_thread(data, &id, initial_state, run_now, ec, schedulehint);
 
         LTM_(info) << "register_thread(" << id << "): initial_state("
                    << get_thread_state_name(initial_state) << "), "
@@ -98,7 +98,7 @@ namespace hpx { namespace threads { namespace detail
                    << ")";
 
         // potentially wake up waiting thread
-        scheduler->do_some_work(num_thread);
+        scheduler->do_some_work(schedulehint);
     }
 }}}
 

@@ -471,8 +471,9 @@ namespace hpx { namespace threads { namespace policies
         // pending
         void create_thread(thread_init_data& data, thread_id_type* id,
             thread_state_enum initial_state, bool run_now, error_code& ec,
-            std::size_t num_thread) override
+            thread_schedule_hint thread_id) override
         {
+            std::size_t num_thread = std::size_t(thread_id);
 #ifdef HPX_HAVE_THREAD_TARGET_ADDRESS
 //             // try to figure out the NUMA node where the data lives
 //             if (numa_sensitive_ && std::size_t(-1) == num_thread) {

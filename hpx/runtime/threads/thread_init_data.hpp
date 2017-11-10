@@ -39,7 +39,7 @@ namespace hpx { namespace threads
             parent_locality_id(0), parent_id(nullptr), parent_phase(0),
 #endif
             priority(thread_priority_normal),
-            num_os_thread(std::size_t(-1)),
+            schedulehint(thread_schedule_hint_none),
             stacksize(get_default_stack_size()),
             scheduler_base(nullptr)
         {}
@@ -57,7 +57,7 @@ namespace hpx { namespace threads
             parent_phase(rhs.parent_phase),
 #endif
             priority(rhs.priority),
-            num_os_thread(rhs.num_os_thread),
+            schedulehint(rhs.schedulehint),
             stacksize(rhs.stacksize),
             scheduler_base(rhs.scheduler_base)
         {
@@ -69,7 +69,7 @@ namespace hpx { namespace threads
         thread_init_data(F && f, util::thread_description const& desc,
                 naming::address_type lva_ = 0,
                 thread_priority priority_ = thread_priority_normal,
-                std::size_t os_thread = std::size_t(-1),
+                thread_schedule_hint os_thread = thread_schedule_hint_none,
                 std::ptrdiff_t stacksize_ = std::ptrdiff_t(-1),
                 policies::scheduler_base* scheduler_base_ = nullptr)
           : func(std::forward<F>(f)),
@@ -82,7 +82,7 @@ namespace hpx { namespace threads
 #if defined(HPX_HAVE_THREAD_PARENT_REFERENCE)
             parent_locality_id(0), parent_id(nullptr), parent_phase(0),
 #endif
-            priority(priority_), num_os_thread(os_thread),
+            priority(priority_), schedulehint(os_thread),
             stacksize(stacksize_ == std::ptrdiff_t(-1) ?
                 get_default_stack_size() : stacksize_),
             scheduler_base(scheduler_base_)
@@ -106,7 +106,7 @@ namespace hpx { namespace threads
 #endif
 
         thread_priority priority;
-        std::size_t num_os_thread;
+        thread_schedule_hint schedulehint;
         std::ptrdiff_t stacksize;
 
         policies::scheduler_base* scheduler_base;

@@ -276,15 +276,14 @@ namespace hpx { namespace threads { namespace policies
             return topo.get_numa_node_number(pu_num);
         }
 
-        template <typename Queue>
-        std::size_t num_domains(const std::vector<Queue*> &queues)
+        // assumes queues use index 0..N-1 and correspond to the pool cores
+        std::size_t num_domains(const std::size_t workers)
         {
             auto &rp = resource::get_partitioner();
             auto const& topo = rp.get_topology();
-            std::size_t num_queues = queues.size();
 
             std::set<std::size_t> domains;
-            for (std::size_t local_id = 0; local_id != num_queues; ++local_id)
+            for (std::size_t local_id = 0; local_id != workers; ++local_id)
             {
                 std::size_t global_id = local_to_global_thread_index(local_id);
                 std::size_t pu_num = rp.get_pu_num(global_id);
@@ -375,7 +374,7 @@ namespace hpx { namespace threads { namespace policies
 
         virtual void create_thread(thread_init_data& data, thread_id_type* id,
             thread_state_enum initial_state, bool run_now, error_code& ec,
-            std::size_t num_thread) = 0;
+            thread_schedule_hint schedulehint) = 0;
 
         virtual bool get_next_thread(std::size_t num_thread, bool running,
             std::int64_t& idle_loop_count, threads::thread_data*& thrd) = 0;
@@ -383,6 +382,7 @@ namespace hpx { namespace threads { namespace policies
         virtual void schedule_thread(threads::thread_data* thrd,
             std::size_t num_thread,
             thread_priority priority = thread_priority_normal) = 0;
+
         virtual void schedule_thread_last(threads::thread_data* thrd,
             std::size_t num_thread,
             thread_priority priority = thread_priority_normal) = 0;
