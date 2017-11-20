@@ -22,7 +22,7 @@ namespace
 {
   std::regex apple_macro_regex(
     "("
-    "^\\s*#\\s*undef\\s*" // # undef
+    "#\\s*undef\\s*"      // # undef
     "\\b(check|verify|require|check_error)\\b"
       // followed by apple macro name, whole word
     ")"
@@ -32,7 +32,7 @@ namespace
     "|"
     "/\\*.*?\\*/"         // multi line comments (/**/)
     "|"
-    "\"(?:\\\\\\\\|\\\\\"|[^\"])*\"" // string literals
+    "[^\\\\]\".*?[^\\\\]\"" // string literals
     ")"
     "|"                   // or
     "("

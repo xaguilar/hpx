@@ -73,13 +73,9 @@ namespace boost
            ++includes_it)
       {
         std::string rx =
-            std::string("^\\s*#\\s*include\\s*<(")
+            std::string("#\\s*include\\s*[\"<](")
           +   includes_it->include_regex
-          + ")>\\s*$"
-          + "|"
-          + "^\\s*#\\s*include\\s*\"("
-          +   includes_it->include_regex
-          + ")\"\\s*$";
+          + ")*[\">]";
 
         regex_data.push_back(deprecated_includes_regex_data(includes_it, rx));
       }

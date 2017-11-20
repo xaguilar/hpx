@@ -22,7 +22,7 @@ namespace
 {
   std::regex assert_macro_regex(
     "("
-    "^\\s*#\\s*undef\\s*" // # undef
+    "#\\s*undef\\s*"      // # undef
     "\\b(assert)\\b"      // followed by assert macro, whole word
     ")"
     "|"                   // or (ignored)
@@ -31,7 +31,7 @@ namespace
     "|"
     "/\\*.*?\\*/"         // multi line comments (/**/)
     "|"
-    "\"(?:\\\\\\\\|\\\\\"|[^\"])*\"" // string literals
+    "[^\\\\]\".*?[^\\\\]\"" // string literals
     ")"
     "|"                   // or
     "("

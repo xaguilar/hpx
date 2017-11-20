@@ -20,7 +20,7 @@ namespace
 {
   std::regex minmax_regex(
     "("
-    "^\\s*#\\s*undef\\s*" // # undef
+    "#\\s*undef\\s*"      // # undef
     "\\b(min|max)\\b"     // followed by min or max, whole word
     ")"
     "|"                   // or (ignored)
@@ -29,7 +29,7 @@ namespace
     "|"
     "/\\*.*?\\*/"         // multi line comments (/**/)
     "|"
-    "\"(?:\\\\\\\\|\\\\\"|[^\"])*\"" // string literals
+    "[^\\\\]\".*?[^\\\\]\"" // string literals
     ")"
     "|"                   // or
     "("

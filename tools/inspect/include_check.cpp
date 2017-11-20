@@ -20,11 +20,7 @@ namespace boost
 {
   namespace inspect
   {
-    std::regex include_regex(
-      "^\\s*#\\s*include\\s*<([^\n>]*)>(\\s|//[^\\n]*|/\\*.*?\\*/)*$"     // # include <foobar>
-      "|"
-      "^\\s*#\\s*include\\s*\"([^\n\"]*)\"(\\s|//[^\\n]*|/\\*.*?\\*/)*$"  // # include "foobar"
-    );
+    std::regex include_regex("#\\s*include\\s*[\"<]([^\">]+)*[\">]");
 
     names_includes const names[] =
     {
@@ -197,7 +193,7 @@ namespace boost
           "|"
           "/\\*.*?\\*/"         // multi line comments (/**/)
           "|"
-          "\"([^\"\\\\]|\\\\.)*\"" // string literals
+          "[^\\\\]\".*?[^\\\\]\"" // string literals
           ")";
         regex_data.push_back(names_regex_data(names_it, rx));
       }
