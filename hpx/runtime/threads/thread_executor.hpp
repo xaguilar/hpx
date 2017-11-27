@@ -302,7 +302,8 @@ namespace hpx { namespace threads
             threads::thread_state_enum initial_state = threads::pending,
             bool run_now = true,
             threads::thread_stacksize stacksize = threads::thread_stacksize_default,
-            threads::thread_schedule_hint schedulehint = threads::thread_schedule_hint_none,
+            threads::thread_schedule_hint schedulehint =
+                threads::thread_schedule_hint_none,
             error_code& ec = throws)
         {
             executor_data_->add(std::move(f), desc, initial_state, run_now,
