@@ -88,15 +88,15 @@ namespace hpx { namespace threads { namespace coroutines { namespace detail
     /////////////////////////////////////////////////////////////////////////////
     std::ptrdiff_t const default_stack_size = -1;
 
-    class context_base : public default_context_impl
+    template <typename CoroutineImpl>
+    class context_base : public default_context_impl<CoroutineImpl>
     {
     public:
         typedef void deleter_type(context_base const*);
         typedef hpx::threads::thread_id_type thread_id_type;
 
-        template <typename Derived>
-        context_base(Derived& derived, std::ptrdiff_t stack_size, thread_id_type id)
-          : default_context_impl(derived, stack_size),
+        context_base(std::ptrdiff_t stack_size, thread_id_type id)
+          : default_context_impl<CoroutineImpl>(stack_size),
             m_caller(),
             m_state(ctx_ready),
             m_exit_state(ctx_exit_not_requested),
@@ -169,6 +169,7 @@ namespace hpx { namespace threads { namespace coroutines { namespace detail
         // on return.
         void invoke()
         {
+            this->init();
             HPX_ASSERT(is_ready());
             do_invoke();
             // TODO: could use a binary or here to eliminate
@@ -374,7 +375,7 @@ namespace hpx { namespace threads { namespace coroutines { namespace detail
             swap_context(m_caller, *this, detail::invoke_hint());
         }
 
-        typedef default_context_impl::context_impl_base ctx_type;
+        typedef typename default_context_impl<CoroutineImpl>::context_impl_base ctx_type;
         ctx_type m_caller;
 
         static HPX_EXPORT allocation_counters m_allocation_counters;
