@@ -777,7 +777,7 @@ namespace hpx {
             thread_support_->register_thread(name, ec);
 
             // initialize coroutines context switcher
-            hpx::threads::coroutines::thread_startup(name);
+//             hpx::threads::coroutines::thread_startup(name);
 
             // register this thread with any possibly active Intel tool
             HPX_ITT_THREAD_SET_NAME(name);
@@ -827,7 +827,7 @@ namespace hpx {
     void runtime_impl::deinit_tss()
     {
         // initialize coroutines context switcher
-        hpx::threads::coroutines::thread_shutdown();
+//         hpx::threads::coroutines::thread_shutdown();
 
         // reset applier TSS
         applier_.deinit_tss();
