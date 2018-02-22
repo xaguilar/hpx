@@ -323,7 +323,7 @@ namespace hpx { namespace threads { namespace detail
         // Create in suspended to prevent the thread from being scheduled
         // directly...
         scheduler.SchedulingPolicy::create_thread(background_init,
-            &background_thread, suspended, true, hpx::throws, 
+            &background_thread, suspended, true, hpx::throws,
             thread_schedule_hint(num_thread));
         HPX_ASSERT(background_thread);
         scheduler.SchedulingPolicy::increment_background_thread_count();
@@ -649,7 +649,8 @@ namespace hpx { namespace threads { namespace detail
                     // this might happen, if some thread has been added to the
                     // scheduler queue already but the state has not been reset
                     // yet
-                    scheduler.SchedulingPolicy::schedule_thread(thrd, num_thread);
+                    scheduler.SchedulingPolicy::schedule_thread(thrd, num_thread,
+                        thrd->get_priority());
                 }
 
                 // Remove the mapping from thread_map_ if HPX thread is depleted
@@ -707,7 +708,8 @@ namespace hpx { namespace threads { namespace detail
                                     scheduler.SchedulingPolicy::
                                         decrement_background_thread_count();
                                     scheduler.SchedulingPolicy::schedule_thread(
-                                        background_thread.get(), num_thread);
+                                        background_thread.get(), num_thread,
+                                        background_thread->get_priority());
                                     background_thread.reset();
                                     background_running.reset();
                                 }
@@ -803,7 +805,8 @@ namespace hpx { namespace threads { namespace detail
                         scheduler.SchedulingPolicy::
                             decrement_background_thread_count();
                         scheduler.SchedulingPolicy::schedule_thread(
-                            background_thread.get(), num_thread);
+                            background_thread.get(), num_thread,
+                            background_thread->get_priority());
                         background_thread.reset();
                         background_running.reset();
                     }
