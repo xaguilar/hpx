@@ -672,7 +672,7 @@ namespace detail
                     std::move(this_),
                     future_data_result<Result>::set(std::forward<Result_>(init))),
                 "timed_future_data<Result>::timed_future_data",
-                threads::suspended, true, threads::thread_priority_boost,
+                threads::suspended, threads::thread_priority_boost,
                 threads::thread_schedule_hint_none,
                 threads::thread_stacksize_current, ec);
             if (ec) {

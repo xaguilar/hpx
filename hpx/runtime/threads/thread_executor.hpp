@@ -170,7 +170,6 @@ namespace hpx { namespace threads
                 threads::thread_schedule_hint schedulehint,
                 util::thread_description const& desc,
                 threads::thread_state_enum initial_state,
-                bool run_now,
                 threads::thread_stacksize stacksize,
                 error_code& ec) = 0;
 
@@ -324,12 +323,11 @@ namespace hpx { namespace threads
             threads::thread_schedule_hint schedulehint,
             util::thread_description const& desc,
             threads::thread_state_enum initial_state,
-            bool run_now,
             threads::thread_stacksize stacksize,
             error_code& ec)
         {
             executor_data_->add(std::move(f), schedulehint, desc, initial_state,
-                run_now, stacksize, ec);
+                stacksize, ec);
         }
 
         /// Return an estimate of the number of waiting closures.

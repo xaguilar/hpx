@@ -461,7 +461,7 @@ namespace hpx { namespace parcelset
                 threads::register_thread_nullary(
                     util::deferred_call(put_parcel_ptr, this,
                         std::move(p), std::move(f)),
-                    "parcelhandler::put_parcel", threads::pending, true,
+                    "parcelhandler::put_parcel", threads::pending,
                     threads::thread_priority_boost,
                     threads::thread_schedule_hint_none,
                     threads::thread_stacksize_medium);
@@ -556,7 +556,7 @@ namespace hpx { namespace parcelset
                 threads::register_thread_nullary(
                     util::deferred_call(put_parcels_ptr, this,
                         std::move(parcels), std::move(handlers)),
-                    "parcelhandler::put_parcels", threads::pending, true,
+                    "parcelhandler::put_parcels", threads::pending,
                     threads::thread_priority_boost,
                     threads::thread_schedule_hint_none,
                     threads::thread_stacksize_medium);
