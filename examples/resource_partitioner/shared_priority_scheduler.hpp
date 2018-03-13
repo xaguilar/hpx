@@ -1290,44 +1290,6 @@ return cleanup_terminated(delete_all);
             return result;
         }
 
-        /// This is a function which gets called periodically by the thread
-        /// manager to allow for maintenance tasks to be executed in the
-        /// scheduler. Returns true if the OS thread calling this function
-        /// has to be terminated (i.e. no more work has to be done).
-        virtual bool wait_or_add_new(std::size_t pool_queue_num,
-            bool running, std::int64_t& idle_loop_count)
-        {
-//                LOG_CUSTOM_MSG("wait_or_add_new pool_queue_num "
-//                    << hexnumber(pool_queue_num));
-
-            if (pool_queue_num == std::size_t(-1)) {
-                throw std::runtime_error("pool_queue_num == std::size_t(-1)");
-            }
-            else if (pool_queue_num >=num_workers_) {
-                throw std::runtime_error("pool_queue_num >=num_workers_");
-            }
-
-            std::size_t domain_num = d_lookup_[pool_queue_num];
-            std::size_t q_index = q_lookup_[pool_queue_num];
-
-            std::size_t added = 0;
-            bool result = true;
-
-            result = hp_queues_[domain_num].get_queue(q_index)->
-                wait_or_add_new(running, idle_loop_count, added);
-            if (0 != added) return result;
-
-            result = np_queues_[domain_num].get_queue(q_index)->
-                wait_or_add_new(running, idle_loop_count, added);
-            if (0 != added) return result;
-
-            result = lp_queues_[domain_num].get_queue(q_index)->
-                wait_or_add_new(running, idle_loop_count, added);
-            if (0 != added) return result;
-
-            return result;
-        }
-
         ///////////////////////////////////////////////////////////////////////
         /* @TODO make sure on_start_thread is forwarded
          * currently it does nothing in the thread queue - but might one day
