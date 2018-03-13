@@ -374,7 +374,7 @@ namespace hpx { namespace threads { namespace policies
         virtual bool cleanup_terminated(std::size_t num_thread, bool delete_all) = 0;
 
         virtual void create_thread(thread_init_data& data, thread_id_type* id,
-            thread_state_enum initial_state, bool run_now, error_code& ec,
+            thread_state_enum initial_state, error_code& ec,
             std::size_t num_thread) = 0;
 
         virtual bool get_next_thread(std::size_t num_thread, bool running,
